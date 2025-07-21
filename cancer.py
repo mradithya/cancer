@@ -18,43 +18,34 @@ if uploaded_file:
     os.makedirs(output_dir, exist_ok=True)
 
     # ========== Basic Data Summary ==========
-    st.subheader("Original Data Preview")
+    st.subheader("Data Preview")
     st.dataframe(df.head())
 
-    st.subheader("Original Dataset Info")
+    st.subheader("Dataset Info")
     buffer = io.StringIO()
     df.info(buf=buffer)
     st.text(buffer.getvalue())
 
-    st.subheader("Original Summary Statistics")
+    st.subheader("Summary Statistics")
     st.write(df.describe(include='all'))
 
-    st.subheader("Missing Values (Before Cleaning)")
+    st.subheader("Missing Values")
     st.write(df.isnull().sum())
 
-    # ========== Data Cleaning ==========
-    df_cleaned = df.dropna()
-
-    st.subheader("Cleaned Data Preview")
-    st.dataframe(df_cleaned.head())
-
-    st.subheader("Missing Values (After Cleaning)")
-    st.write(df_cleaned.isnull().sum())
-
-    # ========== Visualizations on Cleaned Data ==========
+    # ========== Visualizations ==========
 
     # 1. Diagnosis Count
-    if 'diagnosis' in df_cleaned.columns:
+    if 'diagnosis' in df.columns:
         st.subheader("Cancer Diagnosis Count")
         plt.figure(figsize=(6, 4))
-        sns.countplot(data=df_cleaned, x='diagnosis', hue='diagnosis', palette='Set2', legend=False)
+        sns.countplot(data=df, x='diagnosis', hue='diagnosis', palette='Set2', legend=False)
         st.pyplot(plt.gcf())
         plt.clf()
 
     # 2. Diagnosis Pie Chart
-    if 'diagnosis' in df_cleaned.columns:
+    if 'diagnosis' in df.columns:
         st.subheader("Diagnosis Distribution - Pie Chart")
-        diagnosis_counts = df_cleaned['diagnosis'].value_counts()
+        diagnosis_counts = df['diagnosis'].value_counts()
         plt.figure(figsize=(5, 5))
         plt.pie(diagnosis_counts, labels=diagnosis_counts.index, autopct='%1.1f%%', startangle=90)
         plt.axis('equal')
@@ -62,9 +53,9 @@ if uploaded_file:
         plt.clf()
 
     # 3. Gender Pie Chart
-    if 'gender' in df_cleaned.columns:
+    if 'gender' in df.columns:
         st.subheader("Gender Distribution")
-        gender_counts = df_cleaned['gender'].value_counts()
+        gender_counts = df['gender'].value_counts()
         plt.figure(figsize=(5, 5))
         plt.pie(gender_counts, labels=gender_counts.index, autopct='%1.1f%%', startangle=90)
         plt.axis('equal')
@@ -72,45 +63,45 @@ if uploaded_file:
         plt.clf()
 
     # 4. Age Histogram
-    if 'age' in df_cleaned.columns:
+    if 'age' in df.columns:
         st.subheader("Age Distribution of Cancer Patients")
         plt.figure(figsize=(6, 4))
-        sns.histplot(df_cleaned['age'], bins=20, kde=True, color='purple')
+        sns.histplot(df['age'], bins=20, kde=True, color='purple')
         st.pyplot(plt.gcf())
         plt.clf()
 
     # 5. Tumor Size by Diagnosis
-    if 'diagnosis' in df_cleaned.columns and 'tumor_size' in df_cleaned.columns:
+    if 'diagnosis' in df.columns and 'tumor_size' in df.columns:
         st.subheader("Average Tumor Size by Diagnosis")
         plt.figure(figsize=(6, 4))
-        sns.barplot(data=df_cleaned, x='diagnosis', y='tumor_size', palette='pastel', errorbar='sd')
+        sns.barplot(data=df, x='diagnosis', y='tumor_size', palette='pastel', errorbar='sd')
         st.pyplot(plt.gcf())
         plt.clf()
 
     # 6. Age Boxplot by Diagnosis
-    if 'age' in df_cleaned.columns and 'diagnosis' in df_cleaned.columns:
+    if 'age' in df.columns and 'diagnosis' in df.columns:
         st.subheader("Age Distribution by Diagnosis")
         plt.figure(figsize=(6, 4))
-        sns.boxplot(data=df_cleaned, x='diagnosis', y='age', palette='Set3')
+        sns.boxplot(data=df, x='diagnosis', y='age', palette='Set3')
         st.pyplot(plt.gcf())
         plt.clf()
 
     # 7. Swarmplot: Tumor Size vs Diagnosis and Gender
-    if 'tumor_size' in df_cleaned.columns and 'diagnosis' in df_cleaned.columns and 'gender' in df_cleaned.columns:
+    if 'tumor_size' in df.columns and 'diagnosis' in df.columns and 'gender' in df.columns:
         st.subheader("Tumor Size by Diagnosis and Gender")
         try:
             plt.figure(figsize=(7, 5))
-            sns.swarmplot(data=df_cleaned, x='diagnosis', y='tumor_size', hue='gender', palette='Dark2', dodge=True)
+            sns.swarmplot(data=df, x='diagnosis', y='tumor_size', hue='gender', palette='Dark2', dodge=True)
             st.pyplot(plt.gcf())
             plt.clf()
         except Exception as e:
             st.warning(f"Swarmplot skipped due to: {e}")
 
     # 8. Gender vs Diagnosis Count
-    if 'diagnosis' in df_cleaned.columns and 'gender' in df_cleaned.columns:
+    if 'diagnosis' in df.columns and 'gender' in df.columns:
         st.subheader("Diagnosis Count Grouped by Gender")
         plt.figure(figsize=(6, 4))
-        sns.countplot(data=df_cleaned, x='diagnosis', hue='gender', palette='Set1')
+        sns.countplot(data=df, x='diagnosis', hue='gender', palette='Set1')
         st.pyplot(plt.gcf())
         plt.clf()
 
