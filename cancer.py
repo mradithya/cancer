@@ -2,8 +2,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
+import io
 import os
-
 st.title("Cancer Data Analytics Dashboard")
 
 # Upload CSV File
@@ -21,9 +21,10 @@ if uploaded_file:
     st.dataframe(df.head())
 
     st.subheader("Dataset Info")
-    buffer = []
+
+    buffer = io.StringIO()
     df.info(buf=buffer)
-    st.text('\n'.join(map(str, buffer)))
+    st.text(buffer.getvalue())
 
     st.subheader("Summary Statistics")
     st.write(df.describe(include='all'))
