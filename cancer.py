@@ -9,7 +9,7 @@ os.makedirs(output_dir, exist_ok=True)
 
 # Load the CSV file
 file_path = 'C:/Users/Adithya G B/OneDrive/Desktop/cancer_analytics/cancer_data.csv'
-df = pd.read_csv(file_path)
+df = pd.read_csv("cancer_data.csv")
 
 # ========== Basic Data Summary ==========
 print("First 5 rows of the dataset:")
